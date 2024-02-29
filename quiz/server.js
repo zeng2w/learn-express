@@ -37,6 +37,24 @@ app.get('/read/usernames', (req, res) => {
   res.send(usernames);
 });
 
+app.get('/search/user', addMsgToRequest, (req, res) => {
+  // Extract the username query parameter from the request
+  const { username } = req.query;
+  
+  // Search for the user in the loaded users array
+  const user = req.users.find(user => user.username === username);
+  
+  // If the user is found, send the user data; otherwise, send a not found message
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404).json({
+      error: {message: 'User not found', status: 404}
+    });
+  }
+});
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/write/adduser', addMsgToRequest);
